@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import { assets } from "../assets/assets";
+import RelatedDoctor from "../components/RelatedDoctor";
 
 const Appointment = () => {
   const { docId } = useParams();
@@ -127,6 +128,7 @@ const Appointment = () => {
         <div className="sm:ml-72 sm:pl-4 mt-4 font-medium text-gray-700">
           <p>Booking Slots</p>
           <div className="flex gap-3 items-center w-full overflow-x-scroll mt-4">
+<<<<<<< HEAD:src/pages/Appointment.jsx
             {docSlots.map((daySlots, index) => (
               <div
                 onClick={() => {
@@ -135,6 +137,33 @@ const Appointment = () => {
                 }}
                 className={`text-center py-6 min-w-16 rounded-full cursor-pointer ${
                   slotIndex === index
+=======
+            {docSlots.length &&
+              docSlots.map((item, index) => (
+                <div
+                  onClick={() => setSlotIndex(index)}
+                  className={`text-center py-6 min-w-16 rounded-full cursor-pointer ${
+                    slotIndex === index
+                      ? "bg-primary text-white"
+                      : "border border-gray-200"
+                  }`}
+                  key={index}
+                >
+                  <p>{item[0] && daysOfWeeks[item.dateTime.getDay()]}</p>
+                  <p>{item[0] && item[0].dateTime.getDate()}</p>
+                </div>
+              ))
+              }
+          </div>
+        </div>
+        <div className="flex items-center gap-3 w-full overflow-x-scroll mt-4">
+          {docSlots.length &&
+            docSlots.map((item, index) => (
+              <p
+                onClick={() => setSlotTime(item.time)}
+                className={`text-sm font-light flex-shrink-0 px-5 py-2 rounded-full cursor-pointer ${
+                  item.time === slotTime
+>>>>>>> beade40ac2b056cf348085ebf8bbb7889d734e47:frontend/src/pages/Appointment.jsx
                     ? "bg-primary text-white"
                     : "border border-gray-200"
                 }`}
@@ -155,6 +184,7 @@ const Appointment = () => {
           </div>
         </div>
 
+<<<<<<< HEAD:src/pages/Appointment.jsx
         {/* Time slot selector */}
         <div className="flex items-center gap-3 w-full overflow-x-scroll mt-4">
           {docSlots[slotIndex]?.map((item, index) => (
@@ -178,6 +208,10 @@ const Appointment = () => {
             Book an appointment
           </button>
         )}
+=======
+        {/* Related Doctor */}
+        <RelatedDoctor docId={docId} speciality={docInfo.speciality} />
+>>>>>>> beade40ac2b056cf348085ebf8bbb7889d734e47:frontend/src/pages/Appointment.jsx
       </div>
     )
   );
