@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import { assets } from "../assets/assets";
+import RelatedDoctor from "../components/RelatedDoctor";
 
 const Appointment = () => {
   const { docId } = useParams();
@@ -139,10 +140,11 @@ const Appointment = () => {
                   }`}
                   key={index}
                 >
-                  <p>{item[0] && daysOfWeeks[item[0].dateTime.getDay()]}</p>
+                  <p>{item[0] && daysOfWeeks[item.dateTime.getDay()]}</p>
                   <p>{item[0] && item[0].dateTime.getDate()}</p>
                 </div>
-              ))}
+              ))
+              }
           </div>
         </div>
         <div className="flex items-center gap-3 w-full overflow-x-scroll mt-4">
@@ -162,6 +164,9 @@ const Appointment = () => {
             ))}
             <button className="bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6">Book an appointment</button>
         </div>
+
+        {/* Related Doctor */}
+        <RelatedDoctor docId={docId} speciality={docInfo.speciality} />
       </div>
     )
   );
