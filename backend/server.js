@@ -4,6 +4,8 @@ import 'dotenv/config';
 import connectDB from './config/mongodb.js';
 import { connect } from 'mongoose';
 import connectCloudinary from './config/cloudinary.js';
+import adminRouter from './routes/adminRoute.js';
+// import { addDoctor } from './controllers/adminController.js';
 // import { createServer } from 'http';
 // import { Server } from 'socket.io';
 
@@ -19,6 +21,9 @@ app.use(express.json());
 app.use(cors());
 
 //api endpoints
+app.use('/api/admin', adminRouter);
+//localhost:3000/api/admin/add-doctor
+
 app.get('/', (req, res) => {
     res.send('API is working fine');
 });
