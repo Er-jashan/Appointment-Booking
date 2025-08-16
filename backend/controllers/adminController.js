@@ -12,3 +12,6 @@ const addDoctor = async (req,res)=> {
 }
 
 export { addDoctor };
+
+//this is a placeholder function for adding a doctor
+//you can implement the actual logic later
