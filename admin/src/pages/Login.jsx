@@ -17,10 +17,10 @@ const Login = () => {
       if (state === 'Admin') {
         const { data } = await axios.post(backendUrl + '/api/admin/login', { email, password });
         if (data.success) {
-          localStorage.setItem('aToken',data.token)
+          localStorage.setItem('aToken', data.token)
           setAToken(data.token);
           // You can call setAToken(data.token) here if you want to save the token
-        }else{
+        } else {
           toast.error(data.message)
         }
       } else {
@@ -33,10 +33,10 @@ const Login = () => {
   };
 
   return (
-    <form onSubmit={onSubmitHandler} className="min-h-[80vh] flex items-center">
-      <div className="flex flex-col gap-3 m-auto items-start p-8 min-w-[340px] sm:min-w-96 border rounded-xl text-[#5E5E5E] text-sm shadow-lg">
+    <form onSubmit={onSubmitHandler} className="min-h-[80vh] flex items-center ">
+      <div className="flex flex-col gap-3 m-auto items-start p-8 min-w-[340px] sm:min-w-96 rounded-xl border bg-white border-gray-200 text-[#5E5E5E] text-sm shadow-2xl">
         <p className="text-2xl font-semibold m-auto">
-          <span className="text-primary">{state}</span> Login
+          <span className=" text-[#5F6FFF]">{state}</span> Login
         </p>
         <div className="w-full">
           <p>Email</p>
@@ -58,7 +58,7 @@ const Login = () => {
             required
           />
         </div>
-        <button className="bg-primary text-white w-full py-2 rounded-md text-base">
+        <button className="text-white bg-[#5F6FFF] w-full py-2 rounded-md border border-[#5F6FFF] text-base cursor-pointer hover:bg-white hover:text-[#5F6FFF]">
           Login
         </button>
         {
@@ -68,7 +68,7 @@ const Login = () => {
                 Doctor Login?{" "}
                 <span
                   onClick={() => setState('Doctor')}
-                  className="text-primary cursor-pointer"
+                  className="text-blue-500 cursor-pointer"
                 >
                   Click Here
                 </span>
@@ -79,7 +79,7 @@ const Login = () => {
                 Admin Login?{" "}
                 <span
                   onClick={() => setState('Admin')}
-                  className="text-primary cursor-pointer"
+                  className="text-blue-500 cursor-pointer"
                 >
                   Click Here
                 </span>
