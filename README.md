@@ -52,13 +52,8 @@ Medicura aims to streamline the process of scheduling and managing medical appoi
 - MongoDB instance
 - Cloudinary account (for image uploads)
 
-### 1. Clone the Repository
-```sh
-git clone <repo-url>
-cd Medicura-Appointment-booking
-```
 
-### 2. Backend Setup
+### 1. Backend Setup
 ```sh
 cd backend
 npm install
@@ -66,14 +61,14 @@ npm install
 npm start
 ```
 
-### 3. Frontend Setup
+### 2. Frontend Setup
 ```sh
 cd frontend
 npm install
 npm run dev
 ```
 
-### 4. Admin Panel Setup
+### 3. Admin Panel Setup
 ```sh
 cd admin
 npm install
@@ -83,19 +78,8 @@ npm run dev
 ---
 
 ## Environment Variables
-Create a `.env` file in the `backend/` and `admin/` folders with the following:
+Create a `.env` file in the `backend/` and `admin/` that will hold your secret keys
 
-```
-# backend/.env
-MONGODB_URI=your_mongodb_uri
-CLOUDINARY_NAME=your_cloudinary_name
-CLOUDINARY_API_KEY=your_cloudinary_api_key
-CLOUDINARY_API_SECRET=your_cloudinary_api_secret
-JWT_SECRET=your_jwt_secret
-PORT=3000
-```
-
----
 
 ## API Endpoints (Backend)
 - `/api/admin/add-doctor` (POST): Add a new doctor (admin only)
