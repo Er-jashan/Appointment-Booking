@@ -6,6 +6,7 @@ import { connect } from 'mongoose';
 import connectCloudinary from './config/cloudinary.js';
 import adminRouter from './routes/adminRoute.js';
 import doctorRouter from './routes/doctorRoute.js';
+import userRouter from './routes/userRoute.js';
 // import { addDoctor } from './controllers/adminController.js';
 // import { createServer } from 'http';
 // import { Server } from 'socket.io';
@@ -23,7 +24,8 @@ app.use(cors());
 
 //api endpoints
 app.use('/api/admin', adminRouter);
-app.use('/api/doctor',doctorRouter)
+app.use('/api/doctor',doctorRouter);
+app.use('/api/user',userRouter)
 //localhost:3000/api/admin/add-doctor
 
 app.get('/', (req, res) => {
