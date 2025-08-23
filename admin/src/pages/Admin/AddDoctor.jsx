@@ -12,7 +12,7 @@ const AddDoctor = () => {
   const [experience, setExperience] = useState("1 Year");
   const [fees, setFees] = useState("");
   const [about, setAbout] = useState("");
-  const [speciality, setSpeciality] = useState("General Physician");
+  const [specialization, setSpeciality] = useState("General Physician");
   const [degree, setDegree] = useState("");
   const [address1, setAddress1] = useState("");
   const [address2, setAddress2] = useState("");
@@ -36,7 +36,7 @@ const AddDoctor = () => {
       formData.append("experience", experience);
       formData.append("fees", Number(fees));
       formData.append("about", about);
-      formData.append("speciality", speciality);
+      formData.append("specialization", specialization);
       formData.append("degree", degree);
       formData.append("address", JSON.stringify({ line1: address1, line2: address2 }));
 
@@ -168,10 +168,10 @@ const AddDoctor = () => {
           {/* Right Column */}
           <div className="flex flex-col flex-1 gap-4">
             <div>
-              <p>Speciality</p>
+              <p>Specialization</p>
               <select
                 onChange={(e) => setSpeciality(e.target.value)}
-                value={speciality}
+                value={specialization}
                 className="w-full border border-gray-300 rounded p-2 mt-1"
               >
                 <option value="General Physician">General Physician</option>

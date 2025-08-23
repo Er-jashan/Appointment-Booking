@@ -92,7 +92,7 @@ const allDoctors = async (req , res)=>{
     }
 }
 
-export { addDoctor ,loginAdmin };
+export { addDoctor ,loginAdmin,allDoctors };
 
 //this is a placeholder function for adding a doctor
 //you can implement the actual logic later
