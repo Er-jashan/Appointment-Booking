@@ -79,6 +79,19 @@ const loginAdmin = async (req, res) => {
     }
 }
 
+const allDoctors = async (req , res)=>{
+    try {
+        
+        const doctors = await doctorModel.find({}).select('-password ')
+
+            res.json({success : true , doctors})
+    } catch (error) {
+         console.error('Error logging in admin:', error);
+        res.status(500).json({success:false, message: 'Internal server error'});
+        
+    }
+}
+
 export { addDoctor ,loginAdmin };
 
 //this is a placeholder function for adding a doctor
