@@ -97,7 +97,7 @@ const Appointment = () => {
             </p>
             <div className="flex items-center gap-2 text-sm mt-1 text-gray-600">
               <p>
-                {docInfo.degree} - {docInfo.speciality}
+                {docInfo.degree} - {docInfo.specialization}
               </p>
               <button className="py-0.5 px-2 border text-xs rounded-full">
                 {docInfo.experience}
@@ -169,7 +169,7 @@ const Appointment = () => {
         )}
 
         {/* Related Doctor component */}
-        <RelatedDoctor docId={docId} speciality={docInfo.speciality} />
+        <RelatedDoctor docId={docId} specialization={docInfo.specialization} />
       </div>
     )
   );

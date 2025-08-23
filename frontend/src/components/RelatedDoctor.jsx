@@ -3,18 +3,18 @@ import { useNavigate } from 'react-router-dom'
 import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../context/AppContext';
 
-const RelatedDoctor = ({speciality, docId}) => {
+const RelatedDoctor = ({specialization, docId}) => {
 
     const { doctors } = useContext(AppContext);
     const navigate = useNavigate();
 
     const [relDoc, setRelDocs] = useState([]);
     useEffect(() => {
-        if (doctors.length > 0 && speciality) {
-            const doctorData = doctors.filter((doc) => doc.speciality === speciality && doc._id !== docId);
+        if (doctors.length > 0 && specialization) {
+            const doctorData = doctors.filter((doc) => doc.specialization === specialization && doc._id !== docId);
             setRelDocs(doctorData);
         }
-    }, [doctors, speciality, docId])
+    }, [doctors, specialization, docId])
     return (
         <div className='flex flex-col items-center gap-4 py-16 text-gray-900 md:mx-10'>
             <h1 className='text-3xl font-medium'>Related Doctors</h1>
@@ -31,7 +31,7 @@ const RelatedDoctor = ({speciality, docId}) => {
                                 <p>Available</p>
                             </div>
                             <p className='text-gray-900 text-lg font-medium'>{item.name}</p>
-                            <p className='text-gray-600 text-sm'>{item.speciality}</p>
+                            <p className='text-gray-600 text-sm'>{item.specialization}</p>
                         </div>
                     </div>
                 ))}

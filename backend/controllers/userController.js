@@ -8,6 +8,7 @@ import jwt from 'jsonwebtoken'
 //api to register user
 const registerUser = async (req,res) => {
     try {
+        console.log(req.body)
         const { name, email, password } = req.body
 
         if( !name || !password || !email ){
@@ -32,7 +33,7 @@ const registerUser = async (req,res) => {
             password : hashedPassword
         }
 
-        const newUser = new userModel(userModel)
+        const newUser = new userModel(userData)
         const user = await newUser.save()
 
         const token = jwt.sign({id:user._id}, process.env.JWT_SECRET)
