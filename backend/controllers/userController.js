@@ -2,13 +2,21 @@ import validator from 'validator'
 import bcrypt from 'bcrypt'
 import userModel from '../models/userModel.js'
 import jwt from 'jsonwebtoken'
+import express from 'express';
+const app = express();
+app.use(express.json());
 
 
 
 //api to register user
 const registerUser = async (req,res) => {
     try {
-        console.log(req.body)
+        console.log('>>> registerUser called');
+    console.log('Headers:', {
+      'content-type': req.headers['content-type'],
+      accept: req.headers['accept']
+    });
+    console.log('Parsed body:', req.body);
         const { name, email, password } = req.body
 
         if( !name || !password || !email ){
