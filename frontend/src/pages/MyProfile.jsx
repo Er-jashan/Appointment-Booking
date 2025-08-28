@@ -1,19 +1,56 @@
-import React, { useContext, useState } from 'react'
+import React, { use, useContext, useState,useEffect } from 'react'
 import { assets } from '../assets/assets'
 import { AppContext } from '../context/AppContext'
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import { jwtDecode } from 'jwt-decode';
+
 
 const MyProfile = () => {
-  const { userData, setUserData, token, backendUrl, loadUserProfileData } = useContext(AppContext)
+  const { userData, setUserData, token, backendURL, loadUserProfileData } = useContext(AppContext)
 
   const [isEdit, setIsEdit] = useState(false)
   const [image, setImage] = useState(false)
+
+  const [userId, setUserId] = useState(null);
+
+
+  useEffect(()=>{
+   try {
+    // 1. Retrieve the token from localStorage
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      // 2. Decode the token
+      const decodedToken = jwtDecode(token);
+
+      // 3. Extract the user ID. 
+      //    Check your backend JWT creation logic for the exact key.
+      //    Common keys are 'id', '_id', 'userId', or 'sub'.
+      setUserId(decodedToken.id);
+
+
+      // Optional: Check if the token is expired
+      const currentTime = Date.now() / 1000;
+      if (decodedToken.exp < currentTime) {
+        console.log("Token has expired.");
+        // You might want to log the user out here
+        setUserId(null);  
+      }
+    }
+  } catch (error) {
+    console.error("Error decoding token:", error);
+    // This can happen if the token is malformed or invalid
+  }
+
+   console.log("User ID from token:", userId);
+  },[]);
 
   const updateUserProfileData = async (e) => {
     e.preventDefault()
     try {
       const formData = new FormData()
+      formData.append('userId', userId)
       formData.append('name', userData.name)
       formData.append('phone', userData.phone)
       formData.append('address', JSON.stringify(userData.address))
@@ -22,7 +59,7 @@ const MyProfile = () => {
 
       image && formData.append('image', image)
 
-      const { data } = await axios.post(backendUrl + '/api/user/update-profile', formData, { headers: { token } })
+      const { data } = await axios.post(backendURL + '/api/user/update-profile', formData, { headers: { token } })
 
       if (data.success) {
         toast.success(data.message)
@@ -141,7 +178,7 @@ const MyProfile = () => {
             {isEdit ? (
               <input
                 className="max-w-24 bg-gray-100"
-                type="date"
+                type="text"
                 onChange={(e) => setUserData((prev) => ({ ...prev, dob: e.target.value }))}
                 value={userData.dob}
               />
