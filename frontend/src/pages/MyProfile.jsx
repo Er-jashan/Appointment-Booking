@@ -5,7 +5,7 @@ import axios from 'axios'
 import { toast } from 'react-toastify'
 
 const MyProfile = () => {
-  const { userData, setUserData, token, backendUrl, loadUserProfileData } = useContext(AppContext)
+  const { userData, setUserData, token, backendURL, loadUserProfileData } = useContext(AppContext)
 
   const [isEdit, setIsEdit] = useState(false)
   const [image, setImage] = useState(false)
@@ -22,7 +22,7 @@ const MyProfile = () => {
 
       image && formData.append('image', image)
 
-      const { data } = await axios.post(backendUrl + '/api/user/update-profile', formData, { headers: { token } })
+      const { data } = await axios.post(backendURL + '/api/user/update-profile', formData, { headers: { token } })
 
       if (data.success) {
         toast.success(data.message)
@@ -36,6 +36,9 @@ const MyProfile = () => {
       console.log(error)
       toast.error(error.message)
     }
+
+    console.log('backendUrl:', backendURL);
+
   }
 
   return (
@@ -143,7 +146,7 @@ const MyProfile = () => {
                 className="max-w-24 bg-gray-100"
                 type="date"
                 onChange={(e) => setUserData((prev) => ({ ...prev, dob: e.target.value }))}
-                value={userData.dob}
+                value={userData.dob === "Not Selected" ? "" : userData.dob || ""}
               />
             ) : (
               <p className="text-gray-400">{userData.dob}</p>
