@@ -84,13 +84,14 @@ const updateProfile = async (req, res) => {
     try {
         const { userId, name, phone, address,dob,gender } = req.body;
         const imageFile = req.file;
+        console.log(req.body);
 
-        if(!name || !phone || !gender || !dob) {
+        if(!userId ||!name || !phone || !gender || !dob) {
             return res.json({ success: false, message: 'All fields are required' });
         }
         await userModel.findByIdAndUpdate(userId, {
             name, phone, address:JSON.parse(address),dob,gender,
-        });
+        }, { new: true });
         if(imageFile) {
             const imageUpload = await cloudinary.uploader.upload(imageFile.path, {resource_type:"image",folder:"profile_images"});
             const imageUrl = imageUpload.secure_url;
@@ -99,7 +100,8 @@ const updateProfile = async (req, res) => {
 
         res.json({ success: true, message: 'Profile Updated Successfully!' });
     } catch (error) {
-        
+        res.json({ success: false, message: error.message });
+        console.log(error.message);
     }
 }
 
@@ -107,11 +109,12 @@ const updateProfile = async (req, res) => {
 const bookAppointment = async (req,res)=>{
     try {
         const {userId , docId , slotDate, slotTime} = req.body
+        console.log(req.body);
         const docData = await doctorModel.findById(docId).select('-password')
 
-        if(!docData.available){
-            return res.json({success:false,message:'Doctor not available'})
-        }
+        // if(!docData.available){
+        //     return res.json({success:false,message:'Doctor not available'})
+        // }
 
         let slots_booked = docData.slots_booked
 
@@ -151,25 +154,28 @@ const bookAppointment = async (req,res)=>{
         res.json({success:true, message:'Appointment Booked'})
     } catch (error) {
         console.log(error)
-        res.json({ success: true, message: 'Profile Updated Successfully!' });
-
+        res.json({ success: false, message: 'Failed to book appointment' });
     }
 
 }
 
 // api to get user appointments for frontend my-appointment page
-const listAppointment = async (res,req)=>{
+const listAppointment = async (req, res) => {
     try {
-        const {userId} = req.body
-        const appointments = await appointmentModel.find({userId})
+        // FIX 1: Get the userId securely from the auth middleware, NOT req.body
+        const userId = req.user.id;
 
-        res.json({success:true,appointments})
+        // Find all appointments that match the authenticated user's ID
+        const appointments = await appointmentModel.find({ userId });
+        
+        res.json({ success: true, appointments });
 
     } catch (error) {
-        console.log(error)
-        res.json({ success: true, message: 'Profile Updated Successfully!' });
+        console.log(error);
+        // It's good practice to send a proper server error status code
+        res.status(500).json({ success: false, message: 'Failed to fetch appointments' });
     }
+};
 
-}
 
 export { registerUser, loginUser, getProfile, updateProfile ,bookAppointment ,listAppointment};

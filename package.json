@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/Er-jashan/Appointment-Booking#readme",
   "dependencies": {
+    "jwt-decode": "^4.0.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-scripts": "^5.0.1"

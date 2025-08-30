@@ -4,7 +4,8 @@ import { AppContext } from "../context/AppContext";
 import { assets } from "../assets/assets";
 import RelatedDoctor from "../components/RelatedDoctor";
 import {toast} from 'react-toastify'
-import axois from 'axios'
+import axios from 'axios'
+import { jwtDecode } from "jwt-decode";
 
 const Appointment = () => {
   const { docId } = useParams();
@@ -17,6 +18,41 @@ const Appointment = () => {
   const [docSlots, setDocSlots] = useState([]);
   const [slotIndex, setSlotIndex] = useState(0);
   const [slotTime, setSlotTime] = useState("");
+
+  
+    const [userId, setUserId] = useState(null);
+  
+  
+    useEffect(()=>{
+     try {
+      // 1. Retrieve the token from localStorage
+      const token = localStorage.getItem('token');
+  
+      if (token) {
+        // 2. Decode the token
+        const decodedToken = jwtDecode(token);
+  
+        // 3. Extract the user ID. 
+        //    Check your backend JWT creation logic for the exact key.
+        //    Common keys are 'id', '_id', 'userId', or 'sub'.
+        setUserId(decodedToken.id);
+  
+  
+        // Optional: Check if the token is expired
+        const currentTime = Date.now() / 1000;
+        if (decodedToken.exp < currentTime) {
+          console.log("Token has expired.");
+          // You might want to log the user out here
+          setUserId(null);  
+        }
+      }
+    } catch (error) {
+      console.error("Error decoding token:", error);
+      // This can happen if the token is malformed or invalid
+    }
+  
+     console.log("User ID from token:", userId);
+    },[]);
 
   // Fetch selected doctor's info
   const fetchDocInfo = () => {
@@ -95,9 +131,9 @@ const Appointment = () => {
       let month = date.getMonth()+1;
       let year = date.getFullYear()
 
-      const slotDate = day+"_" +month+"_"+year
+      const slotDate = day + "_" +month+"_"+year
       
-      const { data } = await axois.post(backendURL + '/api/user/book-appointment',{docId, slotDate, slotTime},{headers:{token}})
+      const { data } = await axois.post(backendUrl + '/api/user/book-appointment',{docId, slotDate, slotTime},{headers:{token}})
 
       if(data.success){
         toast.success(data.message)
