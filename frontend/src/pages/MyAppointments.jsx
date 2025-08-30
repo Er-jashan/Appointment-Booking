@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { jwtDecode } from "jwt-decode";
 
 const MyAppointments = () => {
-  const { backendURL, token } = useContext(AppContext);
+  const { backendURL, token, getDoctorsData } = useContext(AppContext);
   const [appointments, setAppointments] = useState([]);
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -32,17 +32,17 @@ const MyAppointments = () => {
         // Optional: Check if the token is expired
         const currentTime = Date.now() / 1000;
         if (decodedToken.exp < currentTime) {
-          console.log("Token has expired.");
+          // console.log("Token has expired.");
           // You might want to log the user out here
           setUserId(null);
         }
       }
     } catch (error) {
-      console.error("Error decoding token:", error);
+      // console.error("Error decoding token:", error);
       // This can happen if the token is malformed or invalid
     }
 
-    console.log("User ID from token:", userId);
+    // console.log("User ID from token:", userId);
   }, []);
 
   const slotDateFormat = (slotDate) => {
@@ -60,12 +60,34 @@ const MyAppointments = () => {
       );
       if (data.success) {
         setAppointments(data.appointments.reverse());
-        console.log(data.appointments);
+        // console.log(data.appointments);
       }
     } catch (error) {
       toast.error(error.message);
     }
   }
+
+  const cancelAppointment = async (appointmentId) => {
+    try {
+      // console.log(appointmentId)
+      const { data } = await axios.post(
+        backendURL + '/api/user/cancel-appointment',
+        { appointmentId },
+        { headers: { token } }
+      );
+      // console.log(data.success)
+      if (data && data.success) {
+        toast.success(data.message);
+        // console.log("succ");
+        getUserAppointments();
+        getDoctorsData();
+      }
+
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message);
+    }
+  }
+
   useEffect(() => {
     if (token) {
       getUserAppointments()
@@ -76,7 +98,7 @@ const MyAppointments = () => {
       <p className='pb-3 mt-12 font-medium text-zinc-700 border-b'>My Appointments</p>
       <div>
         {appointments.map((item, index) => (
-          <div className='grid grid-cols-[1fr_2fr] gap-4 sm:flex sm:gap-6 py-2 border-b' key={index}>
+          <div className='grid grid-cols-[1fr_2fr] gap-4 sm:flex sm:gap-6 py-2 border-b shadow-xl' key={index}>
             <div>
               <img className='w-32 bg-indigo-50' src={item.docData.image} alt='' />
             </div>
@@ -92,9 +114,10 @@ const MyAppointments = () => {
             <div>
             </div>
 
-            <div className='flex flex-col gap-2 justify-end'>
-              <button className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border-rounded hover:bg-primary hover:text-white transition-all duration-300'>Pay Online</button>
-              <button className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border-rounded hover:bg-red-600 hover:text-white transition-all duration-300'>Cancel Appointment</button>
+            <div className='flex flex-col gap-2 justify-center items-center'>
+              {item.cancelled && <p className='text-red-400 pl-10'> Cancelled !</p>}
+              {!item.cancelled && <button className='text-sm text-primary text-center sm:min-w-48 py-2 border border-primary rounded-md hover:bg-primary hover:text-white transition-all duration-300'>Pay Online</button>}
+              {!item.cancelled && <button onClick={()=>cancelAppointment(item._id)} className='text-sm text-red-500 text-center sm:min-w-48 py-2 border border-red-500 rounded-md hover:bg-red-500 hover:text-white transition-all duration-300'>Cancel Appointment</button>}
             </div>
 
           </div>

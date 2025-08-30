@@ -84,7 +84,7 @@ const updateProfile = async (req, res) => {
     try {
         const { userId, name, phone, address,dob,gender } = req.body;
         const imageFile = req.file;
-        console.log(req.body);
+        // console.log(req.body);
 
         if(!userId ||!name || !phone || !gender || !dob) {
             return res.json({ success: false, message: 'All fields are required' });
@@ -101,15 +101,16 @@ const updateProfile = async (req, res) => {
         res.json({ success: true, message: 'Profile Updated Successfully!' });
     } catch (error) {
         res.json({ success: false, message: error.message });
-        console.log(error.message);
+        // console.log(error.message);
     }
 }
 
 // API to book appointment 
 const bookAppointment = async (req,res)=>{
     try {
-        const {userId , docId , slotDate, slotTime} = req.body
-        console.log(req.body);
+        const userId = req.userId;
+        const { docId , slotDate, slotTime} = req.body
+        // console.log(req.body);
         const docData = await doctorModel.findById(docId).select('-password')
 
         // if(!docData.available){
@@ -153,7 +154,7 @@ const bookAppointment = async (req,res)=>{
         await doctorModel.findByIdAndUpdate(docId , {slots_booked})
         res.json({success:true, message:'Appointment Booked'})
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         res.json({ success: false, message: 'Failed to book appointment' });
     }
 
@@ -163,7 +164,7 @@ const bookAppointment = async (req,res)=>{
 const listAppointment = async (req, res) => {
     try {
         // FIX 1: Get the userId securely from the auth middleware, NOT req.body
-        const userId = req.user.id;
+        const userId = req.userId;
 
         // Find all appointments that match the authenticated user's ID
         const appointments = await appointmentModel.find({ userId });
@@ -177,5 +178,28 @@ const listAppointment = async (req, res) => {
     }
 };
 
+//api to cancell appointemnt
+const cancelAppointment = async (req, res) => {
+    try {
+        const userId = req.userId;
+        const { appointmentId } = req.body;
+        const appointmentData = await appointmentModel.findById(appointmentId);
+        //verifying appointment ownership
+        if (appointmentData.userId.toString() !== userId) {
+            return res.json({ success: false, message: 'Unauthorized action' });
+        }
+        await appointmentModel.findByIdAndUpdate(appointmentId, { cancelled:true })
+        //releasing doctor's slot
+        const {docId ,slotDate,slotTime} =  appointmentData;
+        const doctorData = await doctorModel.findById(docId);
+        let slots_booked = doctorData.slots_booked;
+        slots_booked[slotDate] = slots_booked[slotDate].filter(e=> e!== slotTime);
+        await doctorModel.findByIdAndUpdate(docId, {slots_booked})
+        res.json({success:true, message: 'Appointment Cancelled !'})
+    } catch (error) {
+        res.json({success : false, message:error.message})
+    }
+}
 
-export { registerUser, loginUser, getProfile, updateProfile ,bookAppointment ,listAppointment};
+
+export { registerUser, loginUser, getProfile, updateProfile ,bookAppointment ,listAppointment, cancelAppointment};
