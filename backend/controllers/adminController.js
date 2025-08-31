@@ -4,6 +4,7 @@ import {v2 as cloudinary} from 'cloudinary';
 import Doctor from '../models/doctorModel.js';
 import doctorModel from '../models/doctorModel.js';
 import jwt from 'jsonwebtoken';
+import appointmentModel from '../models/appointmentModel.js'
 // import cloudinary from '../config/cloudinary.js';
 
 //api for addding doctor
@@ -92,7 +93,19 @@ const allDoctors = async (req , res)=>{
     }
 }
 
-export { addDoctor ,loginAdmin,allDoctors };
+// API TO  GET ALL APPOINTMENTS LIST
+const appointemntsAdmin = async (res,req) =>{
+    try {
+        const appointemnts = await appointmentModel.find({})
+        res.json({success:true,appointemnts})
+    } catch (error) {
+        console.error('Error logging in admin:', error);
+        res.status(500).json({success:false, message: 'Internal server error'});
+        
+    }
+}
+
+export { addDoctor ,loginAdmin,allDoctors ,appointemntsAdmin};
 
 //this is a placeholder function for adding a doctor
 //you can implement the actual logic later

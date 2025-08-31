@@ -40,7 +40,7 @@ const MyAppointments = () => {
         }
       }
     } catch (error) {
-      // console.error("Error decoding token:", error);
+      console.error("Error decoding token:", error);
       // This can happen if the token is malformed or invalid
     }
 
@@ -125,7 +125,7 @@ const MyAppointments = () => {
       }
 
     } catch (error) {
-      
+      console.log(error)
     }
   }
 

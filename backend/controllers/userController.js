@@ -203,13 +203,13 @@ const cancelAppointment = async (req, res) => {
 }
 
 //Uncomment this function below
-// const razorpayInstance = new razorpay({
-//     key_id:process.env.RAZORPAY_KEY_ID,
-//     key_secret: process.env.RAZORPAY_KEY_SECRET
-// })
+const razorpayInstance = new razorpay({
+    key_id:process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET
+})
 
 //api to make payments to the doctors
-const paymentRazorpay = async (req, res) => {
+ const paymentRazorpay = async (req, res) => {
 
 
     try {
