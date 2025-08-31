@@ -1,11 +1,9 @@
-import React, { use, useContext, useState,useEffect } from 'react'
+import React, {useContext, useState,useEffect } from 'react'
 import { assets } from '../assets/assets'
 import { AppContext } from '../context/AppContext'
 import axios from 'axios'
 import { toast } from 'react-toastify'
-import { jwtDecode } from 'jwt-decode';
-
-
+import {jwtDecode} from 'jwt-decode'
 const MyProfile = () => {
   const { userData, setUserData, token, backendURL, loadUserProfileData } = useContext(AppContext)
 
