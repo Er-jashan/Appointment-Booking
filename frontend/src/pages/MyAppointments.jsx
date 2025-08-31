@@ -4,14 +4,16 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useEffect } from 'react';
 import { jwtDecode } from "jwt-decode";
+import {useNavigate} from 'react-router-dom'
 
 const MyAppointments = () => {
-  const { backendURL, token } = useContext(AppContext);
+  const { backendURL, token, getDoctorsData } = useContext(AppContext);
   const [appointments, setAppointments] = useState([]);
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 
   const [userId, setUserId] = useState(null);
+  const navigate = useNavigate()
 
 
   useEffect(() => {
@@ -32,17 +34,17 @@ const MyAppointments = () => {
         // Optional: Check if the token is expired
         const currentTime = Date.now() / 1000;
         if (decodedToken.exp < currentTime) {
-          console.log("Token has expired.");
+          // console.log("Token has expired.");
           // You might want to log the user out here
           setUserId(null);
         }
       }
     } catch (error) {
-      console.error("Error decoding token:", error);
+      // console.error("Error decoding token:", error);
       // This can happen if the token is malformed or invalid
     }
 
-    console.log("User ID from token:", userId);
+    // console.log("User ID from token:", userId);
   }, []);
 
   const slotDateFormat = (slotDate) => {
@@ -60,28 +62,92 @@ const MyAppointments = () => {
       );
       if (data.success) {
         setAppointments(data.appointments.reverse());
-        console.log(data.appointments);
+        // console.log(data.appointments);
       }
     } catch (error) {
       toast.error(error.message);
     }
   }
+
+  const cancelAppointment = async (appointmentId) => {
+    try {
+      // console.log(appointmentId)
+      const { data } = await axios.post(
+        backendURL + '/api/user/cancel-appointment',
+        { appointmentId },
+        { headers: { token } }
+      );
+      // console.log(data.success)
+      if (data && data.success) {
+        toast.success(data.message);
+        // console.log("succ");
+        getUserAppointments();
+        getDoctorsData();
+      }
+
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message);
+    }
+  }
+
+  const initPay = (order)=>{
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+      amount: order.amount,
+      currency: order.currency,
+      name:'Appointment Payment',
+      description:'Appointment Payment',
+      order_id:order.id,
+      receipt:order.receipt,
+      handler: async (response) => {
+        try {
+          const {data} = await axios.post(backendURL+'/api/user/verifyRazorpay',response,{headers:{token}})
+          if (data.success) {
+            getUserAppointments()
+            navigate('/my-appointments')
+          }
+        } catch (error) {
+          toast.error(error.message)
+        }
+      }
+    }
+    const rzp = new window.Razorpay(options)
+    rzp.open()
+  }
+
+  //payment section
+  const appointmentRazorpay = async (appointmentId)=>{
+    try {
+      const {data} = await axios.post(backendURL+'/api/user/payment-razorpay',{appointmentId},{headers:{token}})
+
+      if (data.success) {
+        initPay(data.order)
+      }
+
+    } catch (error) {
+      
+    }
+  }
+
   useEffect(() => {
     if (token) {
       getUserAppointments()
     }
   }, [token])
+
+
   return (
     <div>
       <p className='pb-3 mt-12 font-medium text-zinc-700 border-b'>My Appointments</p>
       <div>
         {appointments.map((item, index) => (
-          <div className='grid grid-cols-[1fr_2fr] gap-4 sm:flex sm:gap-6 py-2 border-b' key={index}>
+          
+          <div className={`grid grid-cols-[1fr_2fr] gap-4 sm:flex sm:gap-6 rounded-md p-2 mb-3 border-b ${item.cancelled && item.payment?'bg-indigo-50':'shadow-xl'}`} key={index}>
             <div>
-              <img className='w-32 bg-indigo-50' src={item.docData.image} alt='' />
+              <img className={`w-32 bg-indigo-100 rounded-md ${item.cancelled?'filter grayscale':''}`} src={item.docData.image} alt='' />
             </div>
 
-            <div className='flex-1 text-sm text-zinc-600'>
+            <div className='flex-1 text-sm text-zinc-600 '>
               <p className='text-neutral-800 font-semibold'>{item.docData.name}</p>
               <p>{item.docData.specialization}</p>
               <p className='text-zinc-700 font-medium mt-1'>Address:</p>
@@ -92,9 +158,11 @@ const MyAppointments = () => {
             <div>
             </div>
 
-            <div className='flex flex-col gap-2 justify-end'>
-              <button className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border-rounded hover:bg-primary hover:text-white transition-all duration-300'>Pay Online</button>
-              <button className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border-rounded hover:bg-red-600 hover:text-white transition-all duration-300'>Cancel Appointment</button>
+            <div className='flex flex-col gap-2 justify-center items-center'>
+              {!item.cancelAppointment && item.payment && <button className='text-green-600 py-2 sm:min-w-48'>Fee Paid</button>}
+              {item.cancelled && <p className='filter-none text-red-400 pr-16'> Cancelled !</p>}
+              {!item.cancelled && !item.payment && <button onClick={()=>appointmentRazorpay(item._id)} className='text-sm text-primary text-center sm:min-w-48 py-2 border border-primary rounded-md hover:bg-primary hover:text-white transition-all duration-300'>Pay Online</button>}
+              {!item.cancelled && <button onClick={()=>cancelAppointment(item._id)} className='text-sm text-red-500 text-center sm:min-w-48 py-2 border border-red-500 rounded-md hover:bg-red-500 hover:text-white transition-all duration-300'>Cancel Appointment</button>}
             </div>
 
           </div>

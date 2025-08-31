@@ -23,7 +23,7 @@ const Doctors = () => {
        applyFilter();
   },[doctors,specialization])
 
-  console.log(specialization)
+  // console.log(specialization)
   return (
     <div>
       <p className='text-gray-600 '>Browse throught the specialist doctors</p>

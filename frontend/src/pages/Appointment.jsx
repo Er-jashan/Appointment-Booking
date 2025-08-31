@@ -41,17 +41,17 @@ const Appointment = () => {
         // Optional: Check if the token is expired
         const currentTime = Date.now() / 1000;
         if (decodedToken.exp < currentTime) {
-          console.log("Token has expired.");
+          // console.log("Token has expired.");
           // You might want to log the user out here
           setUserId(null);  
         }
       }
     } catch (error) {
-      console.error("Error decoding token:", error);
+      // console.error("Error decoding token:", error);
       // This can happen if the token is malformed or invalid
     }
   
-     console.log("User ID from token:", userId);
+    //  console.log("User ID from token:", userId);
     },[]);
 
   // Fetch selected doctor's info
@@ -145,7 +145,7 @@ const Appointment = () => {
       }
       
     } catch (error) {
-      console.log(error)
+      // console.log(error)
       toast.error(data.message)
       
     }
