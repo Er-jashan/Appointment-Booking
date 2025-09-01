@@ -45,7 +45,7 @@ const Dashboard = () => {
       </div>
 
       <div className='bg-white'>
-        <div className='flex items-center gap-2.5 px-4py4 mt-10 rounded-t border border-gray-500'>
+        <div className='flex items-center gap-2.5 px-4 py-4 mt-10 rounded-t border border-gray-500'>
           <img src={assets.list_icon} alt="list" />
           <p className='font-semibold'>Latest Bookings</p>
         </div>
