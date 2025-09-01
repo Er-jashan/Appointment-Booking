@@ -16,6 +16,7 @@ const AdminContextProvider = (props) => {
   // Helper to get headers consistently
   const authHeaders = () => ({
     Authorization: `Bearer ${aToken}`,
+  
     // If your authAdmin middleware reads a custom header instead of Authorization, use:
     // aToken: aToken,
   });
@@ -23,7 +24,7 @@ const AdminContextProvider = (props) => {
   const getAllDoctors = async () => {
     try {
       const { data } = await axios.post(
-        `${backendUrl}/api/admin/all-doctors`,
+        backendUrl+'/api/admin/all-doctors',
         {},
         { headers: authHeaders() }
       );
@@ -41,7 +42,7 @@ const AdminContextProvider = (props) => {
   const changeAvailability = async (docId) => {
     try {
       const { data } = await axios.post(
-        `${backendUrl}/api/admin/change-availability`,
+        backendUrl+'/api/admin/change-availability',
         { docId },
         { headers: authHeaders() }
       );
@@ -59,7 +60,7 @@ const AdminContextProvider = (props) => {
   const getAllAppointments = async () => {
     try {
       const { data } = await axios.get(
-        `${backendUrl}/api/admin/appointments`,
+        backendUrl+'/api/admin/appointments',
         { headers: authHeaders() } // FIXED: headers must be an object
       );
       if (data.success) {
