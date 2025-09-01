@@ -94,10 +94,10 @@ const allDoctors = async (req , res)=>{
 }
 
 // API TO  GET ALL APPOINTMENTS LIST
-const appointemntsAdmin = async (res,req) =>{
+const appointmentsAdmin = async (req, res) =>{
     try {
-        const appointemnts = await appointmentModel.find({})
-        res.json({success:true,appointemnts})
+        const appointments = await appointmentModel.find({})
+        res.json({success:true,appointments})
     } catch (error) {
         console.error('Error logging in admin:', error);
         res.status(500).json({success:false, message: 'Internal server error'});
@@ -105,7 +105,27 @@ const appointemntsAdmin = async (res,req) =>{
     }
 }
 
-export { addDoctor ,loginAdmin,allDoctors ,appointemntsAdmin};
+//api to cancel appointments
+const appointmentCancel = async (req, res) => {
+    try {
+        const { appointmentId } = req.body;
+        const appointmentData = await appointmentModel.findById(appointmentId);
+        
+        await appointmentModel.findByIdAndUpdate(appointmentId, { cancelled: true })
+        //releasing doctor's slot
+        const { docId, slotDate, slotTime } = appointmentData;
+        const doctorData = await doctorModel.findById(docId);
+        let slots_booked = doctorData.slots_booked;
+        slots_booked[slotDate] = slots_booked[slotDate].filter(e => e !== slotTime);
+        await doctorModel.findByIdAndUpdate(docId, { slots_booked })
+        res.json({ success: true, message: 'Appointment Cancelled !' })
+    } catch (error) {
+        res.json({ success: false, message: error.message })
+    }
+}
+
+
+export { addDoctor ,loginAdmin,allDoctors ,appointmentsAdmin , appointmentCancel};
 
 //this is a placeholder function for adding a doctor
 //you can implement the actual logic later

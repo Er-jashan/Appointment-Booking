@@ -6,7 +6,7 @@ export const AdminContext = createContext();
 
 const AdminContextProvider = (props) => {
   const [aToken, setAToken] = useState(
-    localStorage.getItem("aToken") ? localStorage.getItem("aToken") : ""
+    localStorage.getItem("aToken") ? localStorage.getItem("aToken") : ''
   );
   const [doctors, setDoctors] = useState([]);
   const [appointments, setAppointments] = useState([]);
@@ -14,22 +14,22 @@ const AdminContextProvider = (props) => {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   // Helper to get headers consistently
-  const authHeaders = () => ({
-    Authorization: `Bearer ${aToken}`,
-    // If your authAdmin middleware reads a custom header instead of Authorization, use:
-    // aToken: aToken,
-  });
+  // const {aToken} () => ({
+  //   Authorization: `Bearer ${aToken}`,
+  //   // If your authAdmin middleware reads a custom header instead of Authorization, use:
+  //   // aToken: aToken,
+  // });
 
   const getAllDoctors = async () => {
     try {
       const { data } = await axios.post(
         `${backendUrl}/api/admin/all-doctors`,
         {},
-        { headers: authHeaders() }
+        { headers: {aToken}}
       );
       if (data.success) {
         setDoctors(data.doctors);
-        console.log(data.doctors);
+        // console.log(data.doctors);
       } else {
         toast.error(data.message);
       }
@@ -43,7 +43,7 @@ const AdminContextProvider = (props) => {
       const { data } = await axios.post(
         `${backendUrl}/api/admin/change-availability`,
         { docId },
-        { headers: authHeaders() }
+        { headers: {aToken} }
       );
       if (data.success) {
         toast.success(data.message);
@@ -59,8 +59,8 @@ const AdminContextProvider = (props) => {
   const getAllAppointments = async () => {
     try {
       const { data } = await axios.get(
-        `${backendUrl}/api/admin/appointments`,
-        { headers: authHeaders() } // FIXED: headers must be an object
+        `${backendUrl}/api/admin/all-appointments`,
+        { headers: {aToken} } // FIXED: headers must be an object
       );
       if (data.success) {
         setAppointments(data.appointments);
@@ -72,6 +72,20 @@ const AdminContextProvider = (props) => {
       toast.error(error.message);
     }
   };
+  const cancelAppointment = async (appointmentId) => {
+    try {
+      const { data } = await axios.post(`${backendUrl}/api/admin/cancel-appointment`,{appointmentId}, {headers: {aToken}});
+      if(data.success){
+        toast.success(data.message);
+        getAllAppointments()
+      }else{
+        toast.error(error.message)
+      }
+      
+    } catch (error) {
+      toast.error(error.message);
+    }
+  }
 
   const value = {
     aToken,
@@ -82,7 +96,7 @@ const AdminContextProvider = (props) => {
     changeAvailability,
     appointments,
     setAppointments,
-    getAllAppointments,
+    getAllAppointments,cancelAppointment
   };
 
   return (
