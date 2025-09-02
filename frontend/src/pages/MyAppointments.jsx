@@ -9,12 +9,16 @@ import {useNavigate} from 'react-router-dom'
 const MyAppointments = () => {
   const { backendURL, token, getDoctorsData } = useContext(AppContext);
   const [appointments, setAppointments] = useState([]);
-  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-
+  
   const [userId, setUserId] = useState(null);
+  
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   const navigate = useNavigate()
-
+  const slotDateFormat = (slotDate) => {
+    const dateArray = slotDate.split('_'); // FIX 1: Split by underscore
+    // FIX 2: Subtract 1 from the month for correct array index
+    return dateArray[0] + " " + months[Number(dateArray[1]) - 1] + " " + dateArray[2];
+  };
 
   useEffect(() => {
     try {
@@ -47,11 +51,7 @@ const MyAppointments = () => {
     // console.log("User ID from token:", userId);
   }, []);
 
-  const slotDateFormat = (slotDate) => {
-    const dateArray = slotDate.split('_'); // FIX 1: Split by underscore
-    // FIX 2: Subtract 1 from the month for correct array index
-    return dateArray[0] + " " + months[Number(dateArray[1]) - 1] + " " + dateArray[2];
-  };
+
   const getUserAppointments = async () => {
     try {
       const { data } = await axios.get(

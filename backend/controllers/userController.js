@@ -4,7 +4,7 @@ import userModel from '../models/userModel.js'
 import jwt from 'jsonwebtoken'
 import { v2 as cloudinary } from 'cloudinary'
 import doctorModel from '../models/doctorModel.js'
-import appointmentModel from '../models/AppointmentModel.js'
+import appointmentModel from '../models/appointmentModel.js'
 import razorpay from 'razorpay';
 
 
@@ -202,11 +202,12 @@ const cancelAppointment = async (req, res) => {
     }
 }
 
-//Uncomment this function below
-const razorpayInstance = new razorpay({
-    key_id:process.env.RAZORPAY_KEY_ID,
-    key_secret: process.env.RAZORPAY_KEY_SECRET
-})
+
+//Uncomment this function below after adding the razor pay key in the env file
+// const razorpayInstance = new rzorpay({
+//     key_id:process.env.RAZORPAY_KEY_ID,
+//     key_secret: process.env.RAZORPAY_KEY_SECRET
+// })
 
 //api to make payments to the doctors
  const paymentRazorpay = async (req, res) => {
