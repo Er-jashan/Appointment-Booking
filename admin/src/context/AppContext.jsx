@@ -1,48 +1,58 @@
-import React, { createContext, useMemo } from "react";
+import { createContext } from "react";
 
-export const AppContext = createContext({}); // default to an object for safer access [1]
+export const AppContext = createContext();
 
-const AppContextProvider = (props) => {
-  // Config
-  const currency = "₹"; // choose one currency once; avoid duplicate const [8][10]
+<<<<<<< HEAD
+const AppContextProvider = (props) =>{
+    const currency = '$'
 
-  // Utils
-  const calculateAge = (dob) => {
-    if (!dob) return null;
-    const today = new Date();
-    const birthDate = new Date(dob);
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const m = today.getMonth() - birthDate.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-      age--; // correct for month/day so ages aren’t off by one [9]
+    const calculateAge = (dob)=>{
+        const today = new Date();
+        const birthDate = new Date(dob);
+
+        let age = today.getFullYear() - birthDate.getFullYear();
+        return age;
+
+
     }
-    return age;
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    const slotDateFormat = (slotDate) => {
+    const dateArray = slotDate.split('_'); // FIX 1: Split by underscore
+    // FIX 2: Subtract 1 from the month for correct array index
+    return dateArray[0] + " " + months[Number(dateArray[1]) - 1] + " " + dateArray[2];
   };
 
-  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    const value = {
+        calculateAge,
+        slotDateFormat,
+        currency
+=======
+const AppContextProvider = (props) => {
+>>>>>>> 696f1b2ad1e2a3375908c7fd0152f60e5327767f
 
-  // slotDate expected like "12_09_2025" -> "12 Sep 2025"
-  const slotDateFormat = (slotDate) => {
-    if (!slotDate || typeof slotDate !== "string") return "";
-    const parts = slotDate.split("_");
-    if (parts.length !== 3) return slotDate; // fallback to original if unexpected format
-    const [day, mm, yyyy] = parts;
-    const monthIdx = Number(mm) - 1;
-    const mon = months[monthIdx] ?? mm; // guard invalid month
-    return `${day} ${mon} ${yyyy}`;
-  };
+    const calculateAge = (dob) => {
+        const today = new Date();
+        const birthDate = new Date(dob);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        return age;
+    }
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const slotDateFormat = (slotDate) => {
+        const dateArray = slotDate.split('_'); 
+        return dateArray[0] + " " + months[Number(dateArray[1]) - 1] + " " + dateArray[2];
+    };
 
-  // Memoize to prevent value object changing each render [5]
-  const value = useMemo(
-    () => ({
-      calculateAge,
-      slotDateFormat,
-      currency,
-    }),
-    [currency]
-  );
-
-  return <AppContext.Provider value={value}>{props.children}</AppContext.Provider>;
-};
+    const currency = '₹'
+    const value = {
+        calculateAge,
+        slotDateFormat,currency
+    }
+    return (
+        <AppContext.Provider value={value}>
+            {props.children}
+        </AppContext.Provider>
+    )
+}
 
 export default AppContextProvider;
