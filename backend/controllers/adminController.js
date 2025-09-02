@@ -5,6 +5,7 @@ import Doctor from '../models/doctorModel.js';
 import doctorModel from '../models/doctorModel.js';
 import jwt from 'jsonwebtoken';
 import appointmentModel from '../models/appointmentModel.js'
+import userModel from '../models/userModel.js';
 // import cloudinary from '../config/cloudinary.js';
 
 //api for addding doctor
@@ -135,11 +136,35 @@ const appointmentCancel = async (req, res) => {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 export { addDoctor ,loginAdmin,allDoctors ,appointemntsAdmin, appointemntCancel};
 =======
 
 export { addDoctor ,loginAdmin,allDoctors ,appointmentsAdmin , appointmentCancel};
 >>>>>>> 696f1b2ad1e2a3375908c7fd0152f60e5327767f
+=======
+//api to get dashboard data for admin panel
+const adminDashboard = async (req,res) => {
+    try {
+        const doctors = await doctorModel.find({})
+        const users = await userModel.find({})
+        const appointments = await appointmentModel.find({})
+
+        const dashData = {
+            doctors: doctors.length,
+            appointments: appointments.length,
+            patients: users.length,
+            latestAppointments: appointments.reverse().slice(0,5)
+        }
+        res.json({success:true,dashData})
+    } catch (error) {
+        res.json({ success: false, message: error.message })
+    }
+}
+
+
+export { addDoctor ,loginAdmin,allDoctors ,appointmentsAdmin , appointmentCancel, adminDashboard};
+>>>>>>> 10c7c5b020781f0aa368a3af9933f45ef2b09d34
 
 //this is a placeholder function for adding a doctor
 //you can implement the actual logic later

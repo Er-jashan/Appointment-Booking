@@ -24,14 +24,14 @@ const AllApointments = () => {
   }, [aToken])
   return (
     <div className='w-full max-w-6xl m-5'>
-      <p className='mv-3 text-lg font-medium'> All appointmnets</p>
+      <p className='mv-3 text-lg font-medium'> All appointments</p>
       <div className='bg-white border rounded text-sm max-h-[80vh] min-h-[60vh] overflow-y-scroll'>
         <div className='hidden sm:grid grid-cols-[0.5fr_3fr_1fr_3fr_3fr_1fr_1fr] grid-flow-col py-3 px-6 border-b'>
           <p>#</p>
           <p>Patient</p>
           <p>Age</p>
           <p>Date & Time</p>
-          <p>Docotor</p>
+          <p>Doctor</p>
           <p>Fees</p>
           <p>Actions</p>
 
@@ -71,7 +71,7 @@ const AllApointments = () => {
             </div>
             <p>{currency}{item.amount * 10}</p>
             {item.cancelled 
-            ? <p className='text-red-500 text-xs font-medium'>Cancelled !</p>
+            ? <p className='text-red-400 text-xs font-medium'>Cancelled !</p>
             : <img onClick={()=>cancelAppointment(item._id)} className='w-10 cursor-pointer hover:contrast-75' src={assets.cancel_icon} alt="" />
             }
           </div>
