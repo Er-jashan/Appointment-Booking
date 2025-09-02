@@ -3,32 +3,41 @@ import { assets } from "../assets/assets";
 import { AdminContext } from "../context/AdminContext";
 import axios from "axios";
 import { toast } from "react-toastify";
+import  {DoctorContext}  from "../context/DoctorContext"; // fix typo
 
 const Login = () => {
   const [state, setState] = useState("Admin");
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
+  // Object destructuring from contexts
   const { setAToken, backendUrl } = useContext(AdminContext);
+  const { setDToken } = useContext(DoctorContext); // use object destructuring
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
     try {
-      if (state === 'Admin') {
-        const { data } = await axios.post(backendUrl + '/api/admin/login', { email, password });
+      if (state === "Admin") {
+        const { data } = await axios.post(`${backendUrl}/api/admin/login`, { email, password }); // add slash
         if (data.success) {
-          localStorage.setItem('aToken', data.token)
+          localStorage.setItem("aToken", data.token);
           setAToken(data.token);
-          // You can call setAToken(data.token) here if you want to save the token
         } else {
-          toast.error(data.message)
+          toast.error(data.message);
         }
       } else {
-        // Handle doctor login logic here
+        const { data } = await axios.post(`${backendUrl}/api/doctor/login`, { email, password }); // add slash
+        if (data.success) {
+          localStorage.setItem("dToken", data.token);
+          setDToken(data.token);
+          console.log(data.token);
+        } else {
+          toast.error(data.message);
+        }
       }
     } catch (error) {
-      // Optionally display error message to user
       console.log(error);
+      toast.error(error?.response?.data?.message || "Login failed");
     }
   };
 
@@ -38,6 +47,7 @@ const Login = () => {
         <p className="text-2xl font-semibold m-auto">
           <span className=" text-[#5F6FFF]">{state}</span> Login
         </p>
+
         <div className="w-full">
           <p>Email</p>
           <input
@@ -48,6 +58,7 @@ const Login = () => {
             required
           />
         </div>
+
         <div className="w-full">
           <p>Password</p>
           <input
@@ -58,34 +69,26 @@ const Login = () => {
             required
           />
         </div>
+
         <button className="text-white bg-[#5F6FFF] w-full py-2 rounded-md border border-[#5F6FFF] text-base cursor-pointer hover:bg-white hover:text-[#5F6FFF]">
           Login
         </button>
-        {
-          state === 'Admin'
-            ? (
-              <p>
-                Doctor Login?{" "}
-                <span
-                  onClick={() => setState('Doctor')}
-                  className="text-blue-500 cursor-pointer"
-                >
-                  Click Here
-                </span>
-              </p>
-            )
-            : (
-              <p>
-                Admin Login?{" "}
-                <span
-                  onClick={() => setState('Admin')}
-                  className="text-blue-500 cursor-pointer"
-                >
-                  Click Here
-                </span>
-              </p>
-            )
-        }
+
+        {state === "Admin" ? (
+          <p>
+            Doctor Login?{" "}
+            <span onClick={() => setState("Doctor")} className="text-blue-500 cursor-pointer">
+              Click Here
+            </span>
+          </p>
+        ) : (
+          <p>
+            Admin Login?{" "}
+            <span onClick={() => setState("Admin")} className="text-blue-500 cursor-pointer">
+              Click Here
+            </span>
+          </p>
+        )}
       </div>
     </form>
   );
