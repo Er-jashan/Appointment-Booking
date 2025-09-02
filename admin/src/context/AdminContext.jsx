@@ -13,24 +13,7 @@ const AdminContextProvider = (props) => {
   const [dashData,setDashData] = useState({})
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-<<<<<<< HEAD
-  // Helper to get headers consistently
-<<<<<<< HEAD
-  const authHeaders = () => ({
-    Authorization: `Bearer ${aToken}`,
-  
-    // If your authAdmin middleware reads a custom header instead of Authorization, use:
-    // aToken: aToken,
-  });
-=======
-  // const {aToken} () => ({
-  //   Authorization: `Bearer ${aToken}`,
-  //   // If your authAdmin middleware reads a custom header instead of Authorization, use:
-  //   // aToken: aToken,
-  // });
->>>>>>> 696f1b2ad1e2a3375908c7fd0152f60e5327767f
-=======
->>>>>>> 10c7c5b020781f0aa368a3af9933f45ef2b09d34
+
 
   const getAllDoctors = async () => {
     try {
@@ -71,13 +54,8 @@ const AdminContextProvider = (props) => {
   const getAllAppointments = async () => {
     try {
       const { data } = await axios.get(
-<<<<<<< HEAD
-        backendUrl+'/api/admin/appointments',
-        { headers: authHeaders() } // FIXED: headers must be an object
-=======
         `${backendUrl}/api/admin/all-appointments`,
         { headers: {aToken} } // FIXED: headers must be an object
->>>>>>> 696f1b2ad1e2a3375908c7fd0152f60e5327767f
       );
       if (data.success) {
         setAppointments(data.appointments);

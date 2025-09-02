@@ -106,22 +106,12 @@ const appointmentsAdmin = async (req, res) =>{
     }
 }
 
-<<<<<<< HEAD
-// api to cancel appointments
-const appointemntCancel = async (req, res) => {
-    try {
-        
-        const { appointmentId } = req.body;
-        const appointmentData = await appointmentModel.findById(appointmentId);
-       
-=======
 //api to cancel appointments
 const appointmentCancel = async (req, res) => {
     try {
         const { appointmentId } = req.body;
         const appointmentData = await appointmentModel.findById(appointmentId);
         
->>>>>>> 696f1b2ad1e2a3375908c7fd0152f60e5327767f
         await appointmentModel.findByIdAndUpdate(appointmentId, { cancelled: true })
         //releasing doctor's slot
         const { docId, slotDate, slotTime } = appointmentData;
@@ -135,14 +125,6 @@ const appointmentCancel = async (req, res) => {
     }
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-export { addDoctor ,loginAdmin,allDoctors ,appointemntsAdmin, appointemntCancel};
-=======
-
-export { addDoctor ,loginAdmin,allDoctors ,appointmentsAdmin , appointmentCancel};
->>>>>>> 696f1b2ad1e2a3375908c7fd0152f60e5327767f
-=======
 //api to get dashboard data for admin panel
 const adminDashboard = async (req,res) => {
     try {
@@ -164,7 +146,6 @@ const adminDashboard = async (req,res) => {
 
 
 export { addDoctor ,loginAdmin,allDoctors ,appointmentsAdmin , appointmentCancel, adminDashboard};
->>>>>>> 10c7c5b020781f0aa368a3af9933f45ef2b09d34
 
 //this is a placeholder function for adding a doctor
 //you can implement the actual logic later
