@@ -1,14 +1,18 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useContext, useState } from 'react'
 import { DoctorContext } from '../../context/DoctorContext'
+import { AppContext } from '../../context/AppContext'
+import { jwtDecode } from 'jwt-decode'
+import { assets } from '../../assets/assets'
 
 const DoctorAppointments = () => {
-  const { dToken , appointments, getAppointments } = useContext(DoctorContext) 
+  const { dToken, appointments, getAppointments, completeAppointment, cancelAppointment } = useContext(DoctorContext)
+  const { calculateAge, slotDateFormat, currency } = useContext(AppContext)
 
-  useEffect(()=>{
-     if(dToken){
+  useEffect(() => {
+    if (dToken) {
       getAppointments()
-     }
-  },[dToken])
+    }
+  }, [dToken])
   return (
     <div className='w-full max-w-6xl m-5'>
       <p className='mb-3 text-lg font-medium'>All Appointments</p>
@@ -22,6 +26,33 @@ const DoctorAppointments = () => {
           <p>Fees</p>
           <p>Action</p>
         </div>
+        {appointments.map((item, index) => (
+          <div
+            className='flex flex-wrap justify-between max-sm:gap-2 sm:grid sm:grid-cols-[0.5fr_2fr_1fr_1fr_3fr_1fr_1fr] items-center text-gray-700 py-3 px-6 border-b hover:bg-gray-200'
+            key={index}
+          >
+            <p className='max-sm:hidden'>{index + 1}</p>
+            <div className='flex items-center gap-2'>
+              <img className='w-8 rounded-full' src={item.userData?.image} alt='' />
+              <p>{item.userData?.name}</p>
+            </div>
+            <p >{item.payment ? 'Online' : 'Cash'}</p>
+            <p className='max-sm:hidden'>{item.userData?.dob ? calculateAge(item.userData.dob) : '-'}</p>
+            <p>{slotDateFormat(item.slotDate)}, {item.slotTime}</p>
+            <p>{currency}{item.amount * 10}</p>
+
+
+            {item.isCompleted
+              ? <p className='text-green-500 text-xs font-medium'>Completed</p>
+              : item.cancelled
+                ? <p className='text-red-400 text-xs font-medium'>Cancelled !</p>
+                : <div className='flex items-center'>
+                  <img onClick={() => completeAppointment(item._id)} className='w-10 cursor-pointer' src={assets.tick_icon} alt="" />
+                  <img onClick={() => cancelAppointment(item._id)} className='w-10 cursor-pointer filter saturate-200' src={assets.cancel_icon} alt="" />
+                </div>}
+
+          </div>
+        ))}
       </div>
     </div>
   )

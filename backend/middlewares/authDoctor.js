@@ -9,10 +9,10 @@ const authDoctor = async (req, res, next) => {
         }
 
         const token_decoded = jwt.verify(dtoken, process.env.JWT_SECRET);
-        req.body.docId = token_decoded.id;
+        req.docId = token_decoded.id;
         next();
     } catch (error) {
-        console.error('Error in authUser middleware:', error);
+        console.error('Error in authDoc middleware:', error);
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 }

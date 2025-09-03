@@ -3,28 +3,72 @@ import { createContext, useState, useMemo } from "react";
 import { toast } from "react-toastify";
 
 // Named export with correct spelling
-export const DoctorContext = createContext({ dToken: "", setDToken: () => {}, backendUrl: "" }); // safe default [9]
+export const DoctorContext = createContext({ dToken: "", setDToken: () => { }, backendUrl: "" }); // safe default [9]
 
 const DoctorContextProvider = (props) => {
   const backendUrl = import.meta.env.VITE_BACKEND_URL; // Vite env usage [10]
   const [dToken, setDToken] = useState(localStorage.getItem("dToken") || "");
- 
   const [appointments, setAppointments] = useState([])
+  const [dashData,setDashData] = useState(false)
 
-  const getAppointments = async ()=>{
+  const getAppointments = async () => {
     try {
-        
-        const {data} = await axios.get(backendUrl + '/api/doctor/appointments',{headers:{dToken}})
-        if (data.success) {
-            setAppointments(data.appointments.reverse())
-            console.log(data.appointments.reverse())
-            
-        }else{
-            toast.error(data.message)
-        }
+
+      const { data } = await axios.get(backendUrl + '/api/doctor/appointments', { headers: { dToken } })
+      if (data.success) {
+        setAppointments(data.appointments)
+        console.log(data.appointments.reverse())
+
+      } else {
+        toast.error(data.message)
+      }
     } catch (error) {
-        console.log(error)
+      console.log(error)
+      toast.error(error.message)
+    }
+  }
+
+  const completeAppointment = async (appointmentId) => {
+    try {
+      const { data } = await axios.post(`${backendUrl}/api/doctor/complete-appointment`, { appointmentId }, { headers: { dToken } })
+      if (data.success) {
+        toast.success(data.message);
+        getAppointments()
+      } else {
         toast.error(error.message)
+      }
+    } catch (error) {
+      toast.error(error.message);
+
+    }
+  }
+
+  const cancelAppointment = async (appointmentId) => {
+    try {
+      const { data } = await axios.post(`${backendUrl}/api/doctor/cancel-appointment`, { appointmentId }, { headers: { dToken } });
+      if (data.success) {
+        toast.success(data.message);
+        getAppointments()
+      } else {
+        toast.error(error.message)
+      }
+
+    } catch (error) {
+      toast.error(error.message);
+    }
+  }
+  const getDashData = async () => {
+    try {
+      const { data } = await axios.post(`${backendUrl}/api/doctor/dashboard`, { headers: { dToken } });
+      if (data.success) {
+        setDashData(data.dashData)
+        // toast.success(data.message);
+      } else {
+        toast.error(error.message)
+      }
+
+    } catch (error) {
+      
     }
   }
   const value = useMemo(
@@ -32,10 +76,14 @@ const DoctorContextProvider = (props) => {
       dToken,
       setDToken,
       backendUrl,
-      appointments,setAppointments,
-      getAppointments
+      appointments,
+      setAppointments,
+      getAppointments,
+      completeAppointment,
+      cancelAppointment,
+      dashData,getDashData
     }),
-    [dToken, backendUrl]
+    [dToken, backendUrl, appointments]
   );
 
   return <DoctorContext.Provider value={value}>{props.children}</DoctorContext.Provider>;

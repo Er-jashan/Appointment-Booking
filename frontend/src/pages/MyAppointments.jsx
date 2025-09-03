@@ -142,7 +142,7 @@ const MyAppointments = () => {
       <div>
         {appointments.map((item, index) => (
           
-          <div className={`grid grid-cols-[1fr_2fr] gap-4 sm:flex sm:gap-6 rounded-md p-2 mb-3 border-b ${item.cancelled && item.payment?'bg-indigo-50':'shadow-xl'}`} key={index}>
+          <div className={`grid grid-cols-[1fr_2fr] gap-4 sm:flex sm:gap-6 rounded-md p-2 mb-3 border-b ${item.cancelled && !item.payment?'bg-indigo-50':'shadow-xl'}`} key={index}>
             <div>
               <img className={`w-32 bg-indigo-100 rounded-md ${item.cancelled?'filter grayscale':''}`} src={item.docData.image} alt='' />
             </div>
