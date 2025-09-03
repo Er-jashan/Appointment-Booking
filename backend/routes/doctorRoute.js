@@ -9,7 +9,7 @@ doctorRouter.post('/login',loginDoctor)
 doctorRouter.get('/appointments',authDoctor,appointmentsDoctor)
 doctorRouter.post('/complete-appointment',authDoctor,appointmentComplete);
 doctorRouter.post('/cancel-appointment',authDoctor,appointmentCancel)
-doctorRouter.post('/dashboard',authDoctor,doctorDashboard);
+doctorRouter.get('/dashboard',authDoctor,doctorDashboard);
 
 
 export default doctorRouter;
