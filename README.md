@@ -5,6 +5,7 @@ Medicura is a full-stack web application for booking medical appointments. It pr
 
 ## Project Purpose
 Medicura aims to streamline the process of scheduling and managing medical appointments for clinics, hospitals, and individual practitioners. The platform provides an easy-to-use interface for patients to find and book appointments with doctors based on specialty, location, and availability. Doctors can manage their profiles, view appointments, and update their schedules, while administrators oversee the entire system, onboard new doctors, and monitor appointment statistics. The project is designed to reduce manual effort, minimize scheduling conflicts, and improve the overall patient experience by offering a modern, digital solution for healthcare appointment management.
+
 ---
 ## Project Structure
 
@@ -110,9 +111,9 @@ Create a `.env` file in the `backend/` and `admin/` that will hold your secret k
 ---
 
 ## License
-This project is for educational and demonstration purposes.
+This is project is for demonstration of skills only.
 
 ---
 
 ## Author
-Developed by harmanbajwa2954 and Er-jashan.
+Developed by `harmanbajwa2954` and `Er-jashan`.
