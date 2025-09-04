@@ -1,14 +1,17 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { assets } from "../assets/assets";
 import { AdminContext } from "../context/AdminContext";
 import axios from "axios";
 import { toast } from "react-toastify";
-import  {DoctorContext}  from "../context/DoctorContext"; // fix typo
+import { DoctorContext } from "../context/DoctorContext"; // fix typo
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [state, setState] = useState("Admin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate()
+
 
   // Object destructuring from contexts
   const { setAToken, backendUrl } = useContext(AdminContext);
@@ -22,6 +25,8 @@ const Login = () => {
         if (data.success) {
           localStorage.setItem("aToken", data.token);
           setAToken(data.token);
+          navigate('/admin-dashboard');
+
         } else {
           toast.error(data.message);
         }
@@ -30,16 +35,17 @@ const Login = () => {
         if (data.success) {
           localStorage.setItem("dToken", data.token);
           setDToken(data.token);
-          console.log(data.token);
+          navigate('/doctor-dashboard')
         } else {
           toast.error(data.message);
         }
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       toast.error(error?.response?.data?.message || "Login failed");
     }
   };
+
 
   return (
     <form onSubmit={onSubmitHandler} className="min-h-[80vh] flex items-center ">

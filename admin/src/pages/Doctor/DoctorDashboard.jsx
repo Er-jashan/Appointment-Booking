@@ -5,9 +5,9 @@ import { AppContext } from '../../context/AppContext'
 
 
 const DoctorDashboard = () => {
-  const { dToken, dashData, setDashData, getDashData } = useContext(DoctorContext)
-    const { slotDateFormat } = useContext(AppContext)
-  
+  const { dToken, dashData, setDashData, getDashData, cancelAppointment, completeAppointment } = useContext(DoctorContext)
+  const { slotDateFormat } = useContext(AppContext)
+
   useEffect(() => {
     if (dToken) {
       getDashData()
@@ -59,17 +59,21 @@ const DoctorDashboard = () => {
                 <p className='text-gray-700'>{item.userData.name}</p>
                 <p className='text-gray-500 text-xs'>Booking on {slotDateFormat(item.slotDate)}</p>
               </div>
-              {item.cancelled
-                ? <p className='text-red-400 text-xs font-medium'>Cancelled !</p>
-                : <img onClick={() => cancelAppointment(item._id)} className='w-10 cursor-pointer hover:contrast-75' src={assets.cancel_icon} alt="" />
-              }
+              {item.isCompleted
+                ? <p className='text-green-500 text-xs font-medium'>Completed</p>
+                : item.cancelled
+                  ? <p className='text-red-400 text-xs font-medium'>Cancelled !</p>
+                  : <div className='flex items-center'>
+                    <img onClick={() => completeAppointment(item._id)} className='w-10 cursor-pointer' src={assets.tick_icon} alt="" />
+                    <img onClick={() => cancelAppointment(item._id)} className='w-10 cursor-pointer filter saturate-200' src={assets.cancel_icon} alt="" />
+                  </div>}
             </div>
           ))
         }
         </div>
       </div>
     </div>
-    
+
   )
 }
 

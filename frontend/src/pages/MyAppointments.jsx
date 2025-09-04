@@ -142,9 +142,9 @@ const MyAppointments = () => {
       <div>
         {appointments.map((item, index) => (
           
-          <div className={`grid grid-cols-[1fr_2fr] gap-4 sm:flex sm:gap-6 rounded-md p-2 mb-3 border-b ${item.cancelled && !item.payment?'bg-indigo-50':'shadow-xl'}`} key={index}>
+          <div className={`grid grid-cols-[1fr_2fr] gap-4 sm:flex sm:gap-6 rounded-xl p-2 mb-3 border-b border-l shadow-xl ${item.cancelled && !item.payment?'bg-red-100':''} ${item.isCompleted ?'bg-green-100':''}`} key={index}>
             <div>
-              <img className={`w-32 bg-indigo-100 rounded-md ${item.cancelled?'filter grayscale':''}`} src={item.docData.image} alt='' />
+              <img className={`w-32  rounded-md ${item.cancelled || item.isCompleted ?'filter grayscale':''}`} src={item.docData.image} alt='' />
             </div>
 
             <div className='flex-1 text-sm text-zinc-600 '>
@@ -159,10 +159,11 @@ const MyAppointments = () => {
             </div>
 
             <div className='flex flex-col gap-2 justify-center items-center'>
-              {!item.cancelAppointment && item.payment && <button className='text-green-600 py-2 sm:min-w-48'>Fee Paid</button>}
-              {item.cancelled && <p className='filter-none text-red-400 pr-16'> Cancelled !</p>}
-              {!item.cancelled && !item.payment && <button onClick={()=>appointmentRazorpay(item._id)} className='text-sm text-primary text-center sm:min-w-48 py-2 border border-primary rounded-md hover:bg-primary hover:text-white transition-all duration-300'>Pay Online</button>}
-              {!item.cancelled && <button onClick={()=>cancelAppointment(item._id)} className='text-sm text-red-500 text-center sm:min-w-48 py-2 border border-red-500 rounded-md hover:bg-red-500 hover:text-white transition-all duration-300'>Cancel Appointment</button>}
+              {!item.cancelAppointment && item.payment && !item.isCompleted && <button className='text-green-600 py-2 sm:min-w-48'>Fee Paid</button>}
+              {item.cancelled && !item.isCompleted &&<p className='filter-none text-red-400 pr-16'> Cancelled !</p>}
+              {!item.cancelled && !item.payment && !item.isCompleted && <button onClick={()=>appointmentRazorpay(item._id)} className='text-sm text-primary text-center sm:min-w-48 py-2 border border-primary rounded-md hover:bg-primary hover:text-white transition-all duration-300'>Pay Online</button>}
+              {!item.cancelled && !item.isCompleted &&<button onClick={()=>cancelAppointment(item._id)} className='text-sm text-red-500 text-center sm:min-w-48 py-2 border border-red-500 rounded-md hover:bg-red-500 hover:text-white transition-all duration-300'>Cancel Appointment</button>}
+              {item.isCompleted && <p className='text-green-500 pr-16'>Completed</p>}
             </div>
 
           </div>

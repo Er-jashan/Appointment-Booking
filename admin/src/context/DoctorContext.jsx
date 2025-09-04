@@ -9,7 +9,8 @@ const DoctorContextProvider = (props) => {
   const backendUrl = import.meta.env.VITE_BACKEND_URL; // Vite env usage [10]
   const [dToken, setDToken] = useState(localStorage.getItem("dToken") || "");
   const [appointments, setAppointments] = useState([])
-  const [dashData,setDashData] = useState({})
+  const [dashData, setDashData] = useState({})
+  const [profileData, setProfileData] = useState(false)
 
   const getAppointments = async () => {
     try {
@@ -69,9 +70,22 @@ const DoctorContextProvider = (props) => {
       }
 
     } catch (error) {
-      
+      toast.error(error.message);
     }
   }
+
+  const getProfileData = async () => {
+    try {
+      const { data } = await axios.get(`${backendUrl}/api/doctor/profile`, { headers: { dToken } });
+      if (data.success) {
+        setProfileData(data.profileData)
+        console.log(data.profileData)
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  }
+
   const value = useMemo(
     () => ({
       dToken,
@@ -82,9 +96,11 @@ const DoctorContextProvider = (props) => {
       getAppointments,
       completeAppointment,
       cancelAppointment,
-      dashData,getDashData
+      dashData, getDashData,
+      profileData,setProfileData,
+      getProfileData
     }),
-    [dToken, backendUrl, appointments, dashData]
+    [dToken, backendUrl, appointments, dashData, profileData]
   );
 
   return <DoctorContext.Provider value={value}>{props.children}</DoctorContext.Provider>;
