@@ -203,6 +203,9 @@ const Appointment = () => {
                 {docInfo.fees}
               </span>
             </p>
+            {
+              !docInfo.availability ? <p className="text-red-400 mt-3">Doctor Unavailable !</p> : <p></p>
+            }
           </div>
         </div>
 
@@ -247,11 +250,14 @@ const Appointment = () => {
         </div>
 
         {/* Book button */}
-        {slotTime && (
+        {docInfo.availability ? slotTime && (
           <button onClick={bookAppointment} className="bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6">
             Book an appointment
+          </button>)
+          :<button  className="bg-gray-700 text-white text-sm font-light px-14 py-3 rounded-full my-6">
+            Unavailable
           </button>
-        )}
+        }
 
         {/* Related Doctor component */}
         <RelatedDoctor docId={docId} specialization={docInfo.specialization} />

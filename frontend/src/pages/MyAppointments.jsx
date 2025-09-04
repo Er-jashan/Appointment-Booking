@@ -136,17 +136,23 @@ const MyAppointments = () => {
   }, [token])
 
 
+  // Sort appointments: active first, then cancelled/completed
+  const sortedAppointments = [...appointments].sort((a, b) => {
+    const aInactive = a.cancelled || a.isCompleted;
+    const bInactive = b.cancelled || b.isCompleted;
+    if (aInactive === bInactive) return 0;
+    return aInactive ? 1 : -1;
+  });
+
   return (
     <div>
       <p className='pb-3 mt-12 font-medium text-zinc-700 border-b'>My Appointments</p>
       <div>
-        {appointments.map((item, index) => (
-          
+        {sortedAppointments.map((item, index) => (
           <div className={`grid grid-cols-[1fr_2fr] gap-4 sm:flex sm:gap-6 rounded-xl p-2 mb-3 border-b border-l shadow-xl ${item.cancelled && !item.payment?'bg-red-100':''} ${item.isCompleted ?'bg-green-100':''}`} key={index}>
             <div>
               <img className={`w-32  rounded-md ${item.cancelled || item.isCompleted ?'filter grayscale':''}`} src={item.docData.image} alt='' />
             </div>
-
             <div className='flex-1 text-sm text-zinc-600 '>
               <p className='text-neutral-800 font-semibold'>{item.docData.name}</p>
               <p>{item.docData.specialization}</p>
@@ -155,9 +161,7 @@ const MyAppointments = () => {
               <p className='text-xs'>{item.docData.address.line2}</p>
               <p className='text-xs mt-1'><span className='text-sm text-neutral-700 font-medium'>Date & Time</span> {slotDateFormat(item.slotDate)} | {item.slotTime}</p>
             </div>
-            <div>
-            </div>
-
+            <div></div>
             <div className='flex flex-col gap-2 justify-center items-center'>
               {!item.cancelAppointment && item.payment && !item.isCompleted && <button className='text-green-600 py-2 sm:min-w-48'>Fee Paid</button>}
               {item.cancelled && !item.isCompleted &&<p className='filter-none text-red-400 pr-16'> Cancelled !</p>}
@@ -165,12 +169,9 @@ const MyAppointments = () => {
               {!item.cancelled && !item.isCompleted &&<button onClick={()=>cancelAppointment(item._id)} className='text-sm text-red-500 text-center sm:min-w-48 py-2 border border-red-500 rounded-md hover:bg-red-500 hover:text-white transition-all duration-300'>Cancel Appointment</button>}
               {item.isCompleted && <p className='text-green-500 pr-16'>Completed</p>}
             </div>
-
           </div>
         ))}
-
       </div>
-
     </div>
   )
 }

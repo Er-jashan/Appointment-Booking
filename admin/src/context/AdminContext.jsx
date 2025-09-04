@@ -58,7 +58,7 @@ const AdminContextProvider = (props) => {
         { headers: {aToken} } // FIXED: headers must be an object
       );
       if (data.success) {
-        setAppointments(data.appointments);
+        setAppointments(data.appointments.reverse());
         console.log(data.appointments);
       } else {
         toast.error(data.message);
