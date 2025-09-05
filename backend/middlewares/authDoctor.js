@@ -12,7 +12,6 @@ const authDoctor = async (req, res, next) => {
         req.docId = token_decoded.id;
         next();
     } catch (error) {
-        console.error('Error in authDoc middleware:', error);
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 }

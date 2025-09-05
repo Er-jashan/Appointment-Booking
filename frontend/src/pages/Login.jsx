@@ -6,7 +6,8 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 const Login = () => {
 
-  const { backendURL,token, setToken } = useContext(AppContext);
+  const { backendURL, token, setToken } = useContext(AppContext);
+  const adminURL = import.meta.env.VITE_ADMIN_URL;
   const [state, setState] = useState('Sign Up');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -29,8 +30,8 @@ const Login = () => {
         } else {
           toast.error(data.message);
         }
-        
-      }else{
+
+      } else {
         const { data } = await axios.post(backendURL + '/api/user/login', {
           email,
           password
@@ -44,16 +45,16 @@ const Login = () => {
         }
       }
     } catch (error) {
-      console.log(error)
+      // console.log(error)
       toast.error('Something went wrong');
     }
-    
+
   }
-  useEffect(()=>{
+  useEffect(() => {
     if (token) {
       navigate('/');
     }
-  },[token])
+  }, [token])
   return (
     <form onSubmit={onSubmitHandler} className='min-h-[80vh] flex items-center'>
       <div className='flex flex-col gap-3 items-start m-auto min-w-[340px] sm:min-w-96 border border-zinc-300 text-sm shadow-xl p-8 rounded-md'>
@@ -81,6 +82,12 @@ const Login = () => {
             ? <p className='text-sm text-gray-500'>Already have an account? <span onClick={() => setState('Login')} className='text-primary cursor-pointer'>Login</span></p>
             : <p className='text-sm text-gray-500'>Don't have an account? <span onClick={() => setState('Sign Up')} className='text-primary cursor-pointer'>Create Account</span></p>
         }
+        <p>Click Here for <a
+          href={adminURL}
+          target="_blank" // Opens the link in a new tab
+          rel="noopener noreferrer" // Security best practice for external links
+          className=" font-medium text-xs leading-tight  hover:text-blue-700 hover:shadow-lg focus:text-blue-700 focus:ring-0 active:text-blue-800  transition ease-in-out"
+        >Admin Login</a></p>
       </div>
     </form>
   )

@@ -173,7 +173,6 @@ const listAppointment = async (req, res) => {
         res.json({ success: true, appointments });
 
     } catch (error) {
-        console.log(error);
         // It's good practice to send a proper server error status code
         res.status(500).json({ success: false, message: 'Failed to fetch appointments' });
     }

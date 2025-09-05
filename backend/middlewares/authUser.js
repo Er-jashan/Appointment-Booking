@@ -12,7 +12,6 @@ const authUser = async (req, res, next) => {
         req.userId = token_decoded.id;
         next();
     } catch (error) {
-        console.error('Error in authUser middleware:', error);
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 }

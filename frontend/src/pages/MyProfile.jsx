@@ -31,17 +31,17 @@ const MyProfile = () => {
       // Optional: Check if the token is expired
       const currentTime = Date.now() / 1000;
       if (decodedToken.exp < currentTime) {
-        console.log("Token has expired.");
+        // console.log("Token has expired.");
         // You might want to log the user out here
         setUserId(null);  
       }
     }
   } catch (error) {
-    console.error("Error decoding token:", error);
+    // console.error("Error decoding token:", error);
     // This can happen if the token is malformed or invalid
   }
 
-   console.log("User ID from token:", userId);
+  //  console.log("User ID from token:", userId);
   },[]);
 
   const updateUserProfileData = async (e) => {
@@ -68,11 +68,11 @@ const MyProfile = () => {
         toast.error(data.message)
       }
     } catch (error) {
-      console.log(error)
+      // console.log(error)
       toast.error(error.message)
     }
 
-    console.log('backendUrl:', backendURL);
+    // console.log('backendUrl:', backendURL);
 
   }
 

@@ -17,7 +17,6 @@ const authAdmin = async (req, res, next) => {
         // req.admin = token_decoded;
         next();
     } catch (error) {
-        console.error('Error in authAdmin middleware:', error);
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 }

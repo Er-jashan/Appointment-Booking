@@ -1,12 +1,10 @@
 import validator from 'validator';
 import bycrypt from 'bcrypt';
 import {v2 as cloudinary} from 'cloudinary';
-import Doctor from '../models/doctorModel.js';
 import doctorModel from '../models/doctorModel.js';
 import jwt from 'jsonwebtoken';
 import appointmentModel from '../models/appointmentModel.js'
 import userModel from '../models/userModel.js';
-// import cloudinary from '../config/cloudinary.js';
 
 //api for addding doctor
 const addDoctor = async (req,res)=> {
@@ -57,7 +55,6 @@ const addDoctor = async (req,res)=> {
 
 
     } catch (error) {
-        console.error('Error adding doctor:', error);
         res.json({success:false,message:error.message});
     }
 }
@@ -76,7 +73,6 @@ const loginAdmin = async (req, res) => {
 
 
     }catch (error) {
-        console.error('Error logging in admin:', error);
         res.status(500).json({success:false, message: 'Internal server error'});
     }
 }
@@ -88,7 +84,6 @@ const allDoctors = async (req , res)=>{
 
             res.json({success : true , doctors})
     } catch (error) {
-         console.error('Error logging in admin:', error);
         res.status(500).json({success:false, message: 'Internal server error'});
         
     }
@@ -100,7 +95,6 @@ const appointmentsAdmin = async (req, res) =>{
         const appointments = await appointmentModel.find({})
         res.json({success:true,appointments})
     } catch (error) {
-        console.error('Error logging in admin:', error);
         res.status(500).json({success:false, message: 'Internal server error'});
         
     }
@@ -146,6 +140,3 @@ const adminDashboard = async (req,res) => {
 
 
 export { addDoctor ,loginAdmin,allDoctors ,appointmentsAdmin , appointmentCancel, adminDashboard};
-
-//this is a placeholder function for adding a doctor
-//you can implement the actual logic later
