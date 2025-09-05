@@ -1,7 +1,6 @@
 import React, { useEffect, useContext, useState } from 'react'
 import { DoctorContext } from '../../context/DoctorContext'
 import { AppContext } from '../../context/AppContext'
-import { jwtDecode } from 'jwt-decode'
 import { assets } from '../../assets/assets'
 
 const DoctorAppointments = () => {
